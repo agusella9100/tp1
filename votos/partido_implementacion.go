@@ -10,6 +10,7 @@ import (
 
 const ruta = "archivo.txt"
 
+// como es para leer un archivo segun apuntes de la catedra
 func leerArchivo() {
 	archivo, err := os.Open(ruta)
 	if err != nil {
@@ -28,6 +29,7 @@ func leerArchivo() {
 	}
 }
 
+// esto eera para probar el import, despues lo borramos cuando codiemos cosas donde usemos las listas
 func list() {
 	l := TDALista.CrearListaEnlazada[int]()
 	l.InsertarPrimero(5)
@@ -48,7 +50,7 @@ type partidoEnBlanco struct {
 func CrearPartido(nombre string, candidatos [CANT_VOTACION]string) Partido {
 	partido := new(partidoImplementacion)
 	partido.nombre = nombre
-	
+
 	//leo el archivo de los partidos, guardo su nombre y los candidatos en una cola, pila o lista
 	//cada partido tiene su nombre y 3 candidatos
 	return nil
