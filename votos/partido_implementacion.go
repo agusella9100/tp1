@@ -50,10 +50,8 @@ type partidoEnBlanco struct {
 func CrearPartido(nombre string, candidatos [CANT_VOTACION]string) Partido {
 	partido := new(partidoImplementacion)
 	partido.nombre = nombre
-
-	//leo el archivo de los partidos, guardo su nombre y los candidatos en una cola, pila o lista
-	//cada partido tiene su nombre y 3 candidatos
-	return nil
+	partido.postulantes = candidatos
+	return partido
 }
 
 func CrearVotosEnBlanco() Partido {
@@ -61,16 +59,15 @@ func CrearVotosEnBlanco() Partido {
 }
 
 func (partido *partidoImplementacion) VotadoPara(tipo TipoVoto) {
-
+	partido.contadores[tipo]++
 }
 
 func (partido partidoImplementacion) ObtenerResultado(tipo TipoVoto) string {
-
-	return partido.postulantes[tipo]
+	return
 }
 
 func (blanco *partidoEnBlanco) VotadoPara(tipo TipoVoto) {
-
+	blanco.contadores[tipo]++
 }
 
 func (blanco partidoEnBlanco) ObtenerResultado(tipo TipoVoto) string {

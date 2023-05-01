@@ -13,11 +13,12 @@ func CrearVotante(dni int) Votante {
 }
 
 func (votante votanteImplementacion) LeerDNI() int {
-	//supongo valida que el dni
+	//supongo valida que el dni este escrito
 	return 0
 }
 
 func (votante *votanteImplementacion) Votar(tipo TipoVoto, alternativa int) error {
+
 	return nil
 }
 
