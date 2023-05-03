@@ -42,11 +42,14 @@ func (votante *votanteImplementacion) Votar(tipo TipoVoto, alternativa int) erro
 func (votante *votanteImplementacion) Deshacer() error {
 	//Si no hay votos, imprime el error
 	if votante.votosRealizados.EstaVacia() {
+
 		return errores.ErrorNoHayVotosAnteriores{}
 	}
 	//Si ya voto
 	if votante.yaVoto {
-		return errores.ErrorVotanteFraudulento{Dni: votante.dni}
+		fraude := errores.ErrorVotanteFraudulento{Dni: votante.dni}
+		fraude.Error() // capaz no hay que hacer esto sino que en el "main" si recivimos un error != nil habria que aplicar el metodo Error()
+		return fraude
 	}
 
 	//Elimino la version del ultimo voto
@@ -57,7 +60,9 @@ func (votante *votanteImplementacion) Deshacer() error {
 
 func (votante *votanteImplementacion) FinVoto() (Voto, error) {
 	if votante.yaVoto {
-		return Voto{}, errores.ErrorVotanteFraudulento{Dni: votante.dni}
+		fraude := errores.ErrorVotanteFraudulento{Dni: votante.dni}
+		fraude.Error()
+		return Voto{}, fraude
 	}
 
 	return votante.votosRealizados.VerTope(), nil
