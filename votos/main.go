@@ -1,5 +1,0 @@
-package votos
-
-func main() {
-
-}
