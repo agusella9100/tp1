@@ -25,9 +25,6 @@ func (votante votanteImplementacion) LeerDNI() int {
 func (votante *votanteImplementacion) Votar(tipo TipoVoto, alternativa int) error {
 	//Si ya voto devuelvo el error
 	if votante.yaVoto {
-		//fraude := Errores.ErrorVotanteFraudulento{Dni: votante.dni}
-		/*errorFraude := new(errores.ErrorVotanteFraudulento)
-		errorFraude.Dni = votante.dni*/
 		return errores.ErrorVotanteFraudulento{Dni: votante.dni}
 	}
 	//Aca creo un nuevo voto, copio el anterior y modifico lo que corresponde

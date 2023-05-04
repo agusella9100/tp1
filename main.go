@@ -6,20 +6,30 @@ import (
 	"os"
 )
 
-const ruta = "archivo.txt"
+func main(argc int, argv []string) {
 
-func main() {
-
+	fmt.Printf("recibi %v cosas \n", argc)
 	//Esto supongo que ira en un archivo go en el que implementamos todo el sistema de votos llamando a las primitivas y todo eso
 	// como es para leer un archivo segun apuntes de la catedra
 
-	s := bufio.Scanner{}
-	archivo, err := os.Open(ruta)
-	if err != nil {
-		fmt.Printf("Archivo %s no encontrado", ruta)
+	d := bufio.Scanner{}
+	padrones, errd := os.Open(argv[1])
+
+	if errd != nil {
+		fmt.Printf("Archivo %s no encontrado\n", argv[1])
 		return
 	}
-	defer archivo.Close()
+	defer padrones.Close()
+
+	p := bufio.Scanner{}
+	partidos, errPartidos := os.Open(argv[2])
+
+	if errPartidos != nil {
+		fmt.Printf("Archivo %s no encontrado\n", argv[2])
+		return
+	}
+
+	defer partidos.Close()
 
 	onComma := func(data []byte, atEOF bool) (advance int, token []byte, err error) {
 		for i := 0; i < len(data); i++ {
@@ -30,18 +40,26 @@ func main() {
 		if !atEOF {
 			return 0, nil, nil
 		}
-
-		err = s.Err()
+		err = p.Err()
 		if err != nil {
 			fmt.Println(err)
 		}
 		return 0, data, bufio.ErrFinalToken
 	}
-	a := bufio.NewScanner(os.Stdin)
-	a.Split(onComma)
+
+	p.Split(onComma)
+
 	columna := 0
-	for a.Scan() {
-		fmt.Printf("Leí: %s\n", a.Text())
+	for p.Scan() {
+		fmt.Printf("Leí: %s\n", p.Text())
 		fmt.Printf("De la columna: %v \n", columna)
+		columna++
 	}
+	fila := 0
+	for d.Scan() {
+		fmt.Printf("Leí: %s\n", d.Text())
+		fmt.Printf("De la fila: %v \n", fila)
+		fila++
+	}
+
 }
