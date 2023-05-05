@@ -1,4 +1,4 @@
-package rerepolez
+package main
 
 import (
 	"bufio"
@@ -6,26 +6,34 @@ import (
 	"os"
 )
 
-func main(argc int, argv []string) {
+func main() {
 
-	fmt.Printf("recibi %v cosas \n", argc)
-	//Esto supongo que ira en un archivo go en el que implementamos todo el sistema de votos llamando a las primitivas y todo eso
-	// como es para leer un archivo segun apuntes de la catedra
+	padrones, errdni := os.Open("tests/02_padron")
 
-	d := bufio.Scanner{}
-	padrones, errd := os.Open(argv[1])
-
-	if errd != nil {
-		fmt.Printf("Archivo %s no encontrado\n", argv[1])
+	if errdni != nil {
+		fmt.Printf("Archivo %s no encontrado\n", padrones)
 		return
 	}
 	defer padrones.Close()
 
-	p := bufio.Scanner{}
-	partidos, errPartidos := os.Open(argv[2])
+	d := bufio.NewScanner(padrones)
+	fila := 0
+	for d.Scan() {
+		fmt.Printf("Leí: %s\n", d.Text())
+		fmt.Printf("De la fila: %v \n", fila)
+		fila++
+	}
+	errdni = d.Err()
+	if errdni != nil {
+		fmt.Println(errdni)
+	}
+
+	partidos, errPartidos := os.Open("tests/02_partidos")
+	p := bufio.NewScanner(partidos)
+	p2 := bufio.NewScanner(partidos)
 
 	if errPartidos != nil {
-		fmt.Printf("Archivo %s no encontrado\n", argv[2])
+		fmt.Printf("Archivo %s no encontrado\n", partidos)
 		return
 	}
 
@@ -40,26 +48,31 @@ func main(argc int, argv []string) {
 		if !atEOF {
 			return 0, nil, nil
 		}
-		err = p.Err()
+		err = p2.Err()
 		if err != nil {
 			fmt.Println(err)
 		}
 		return 0, data, bufio.ErrFinalToken
 	}
 
-	p.Split(onComma)
+	p2.Split(onComma)
 
 	columna := 0
-	for p.Scan() {
-		fmt.Printf("Leí: %s\n", p.Text())
+
+	for p2.Scan() {
 		fmt.Printf("De la columna: %v \n", columna)
+		fmt.Printf("Leí: %s\n", p2.Text())
 		columna++
+		if columna > 3 {
+			columna = 0
+		}
 	}
-	fila := 0
-	for d.Scan() {
-		fmt.Printf("Leí: %s\n", d.Text())
-		fmt.Printf("De la fila: %v \n", fila)
-		fila++
+	fmt.Println("salto de linea")
+
+	columna = 0
+	errPartidos = p.Err()
+	if errPartidos != nil {
+		fmt.Println(errPartidos)
 	}
 
 }

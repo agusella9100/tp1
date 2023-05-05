@@ -11,7 +11,7 @@ type votanteImplementacion struct {
 	votosRealizados TDAPila.Pila[Voto]
 }
 
-func CrearVotante(dni int) Votante {
+func CrearVotante[T any](dni int) Votante {
 	nuevoVoto := new(votanteImplementacion)
 	nuevoVoto.votosRealizados = TDAPila.CrearPilaDinamica[Voto]()
 	nuevoVoto.dni = dni
@@ -45,7 +45,7 @@ func (votante *votanteImplementacion) Deshacer() error {
 	//Si ya voto
 	if votante.yaVoto {
 		fraude := errores.ErrorVotanteFraudulento{Dni: votante.dni}
-		fraude.Error() // capaz no hay que hacer esto sino que en el "main" si recivimos un error != nil habria que aplicar el metodo Error()
+		fraude.Error() // capaz no hay que hacer esto sino que en el ma-in si recivimos un error != nil habria que aplicar el metodo Error()
 		return fraude
 	}
 
