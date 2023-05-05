@@ -96,4 +96,153 @@ func main() {
 	if errPartidos != nil {
 		fmt.Println(errPartidos)
 	}
+	
+	    //Aca codigo para leer entrada estandar
+
+    //funcion que recibe un error y lo imprime
+    func imprimirErrores(err error) {
+        fmt.Println(err.Error())
+    }
+    
+    //Una funcion que me dice si el dni esta dentro del padron o no y me devuelve la posicion dentro del array
+    func esVotanteValido(dni int, votantes []Votante) (bool, int) {
+        inicio := 0
+        fin := len(votantes) - 1
+    
+        for inicio <= fin {
+            medio := (inicio + fin) / 2
+            if votantes[medio].dni == dni {
+                return true, medio
+            } else if votantes[medio].dni < dni {
+                inicio = medio + 1
+            } else {
+                fin = medio - 1
+            }
+        }
+    
+        return false, -1
+    }
+
+    //aca arranca
+
+    colaIngresantes := TDACola.CrearColaEnlazada[Votante]()
+
+    scanner := bufio.NewScanner(os.Stdin)
+
+    //For que termina cuando finaliza entrada estandar
+    for scanner.Scan() {
+        linea := scanner.Text()
+        comandos := strings.Split(linea, " ")
+
+        if len(comandos) < 1 {
+            imprimirErrores(new(ErrorParametros))
+            continue
+        }
+
+        //Comando ingresar
+        if comandos[0] == "ingresar" {
+            if len(comandos) != 2 {
+                imprimirErrores(new(ErrorParametros))
+                continue
+            }
+            dni, err := strconv.Atoi(comandos[1])
+            if err != nil {
+                imprimirErrores(new(DNIError))
+                continue
+            }
+
+            if dni < 0 {
+                imprimirErrores(new(DNIError))
+                continue
+            }
+
+            estaDentroDelPadron,_ := esVotanteValido(dni, arrayVotantes)
+
+            if !estaDentroDelPadron {
+                imprimirErrores(new(DNIFueraPadron))
+                continue
+            }
+
+            colaIngresantes.Encolar(TDAVotos.CrearVotante(dni))
+       
+        //comando votar
+        }else if comandos[0] == "votar" {
+            if colaIngresantes.EstaVacia() {
+                imprimirErrores(new(FilaVacia))
+                continue
+            }
+           
+            if len(comandos) != 3 {
+                imprimirErrores(new(ErrorParametros))
+                continue
+            }
+
+            var voto TipoVoto
+
+            if comandos[1] == "Presidente" {
+                voto = PRESIDENTE
+            }else if comandos[1] == "Gobernador" {
+                voto = GOBERNADOR
+            }else if comandos[1] == "Intendente" {
+                voto = INTENDENTE
+            }else {
+                imprimirErrores(new(ErrorTipoVoto))
+                continue
+            }
+
+            lista, _ := strconv.Atoi(comandos[2])
+
+            if lista >= listaPartidos.Largo() {
+                imprimirErrores(new(ErrorAlternativaInvalida))
+                continue
+            }
+
+            _, posicionVotante := esVotanteValido(colaIngresantes.VerPrimero().LeerDNI(), arrayVotantes)
+
+            errYaVoto := arrayVotantes[posicionVotante].Votar(voto)
+            if errYaVoto != nil {
+                imprimirErrores(errYaVoto)
+            }
+
+            colaIngresantes.Desencolar()
+
+
+        //comando deshacer
+        }else if comandos[0] == "deshacer" {
+            if len(comandos) != 1 {
+                imprimirErrores(new(ErrorParametros))
+                continue
+            }
+
+            if colaIngresantes.EstaVacia() {
+                imprimirErrores(new(FilaVacia))
+                continue
+            }          
+            errDeshacer := colaIngresantes.VerPrimero().Deshacer()
+            if errDeshacer != nil {
+                errVotanteFraudulento := new(ErrorVotanteFraudulento)
+                imprimirErrores(errDeshacer)
+                //Comparo si el error recibido es ErrorVotanteFraudulento para sacarlo de la fila en cuyo caso
+                if errDeshacer.Error() == errVotanteFraudulento.Error() {
+                    colaIngresantes.Desencolar()
+                }
+                continue
+            }
+
+
+        //comando fin-votar
+        }else if comandos[0] == "fin-votar" {
+            if len(comandos) != 1 {
+                imprimirErrores(new(ErrorParametros))
+                continue
+            }
+
+            if colaIngresantes.EstaVacia() {
+                imprimirErrores(new(FilaVacia))
+                continue
+            }
+
+            colaIngresantes.VerPrimero().FinVoto()
+        }
+    }
 }
