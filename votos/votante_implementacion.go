@@ -11,7 +11,7 @@ type votanteImplementacion struct {
 	votosRealizados TDAPila.Pila[Voto]
 }
 
-func CrearVotante[T any](dni int) Votante {
+func CrearVotante(dni int) Votante {
 	nuevoVoto := new(votanteImplementacion)
 	nuevoVoto.votosRealizados = TDAPila.CrearPilaDinamica[Voto]()
 	nuevoVoto.dni = dni

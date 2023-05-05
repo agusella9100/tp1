@@ -4,18 +4,18 @@ import (
 	TDAVotante "rerepolez/votos"
 )
 
-// es un quickSort: recive un array de votantes (primitivas leerdni votar-deshacer-finvoto) (dni-yavoto-votosrealizados)
+// es un quickSort: recive un array de votantes (primitivas leerdni votar-deshacer-finvoto) un votante tiene variables (dni-yavoto-votosrealizados)
 func OrdenarPadrones(arr []TDAVotante.Votante) []TDAVotante.Votante {
 	//caso base
-	if len(arr) == 1 {
+	if len(arr) < 2 {
 		return arr
 	}
 	//caso general
-	medio := len(arr) / 2
+	//medio := len(arr) / 2
 	pivote := 0
 	ultimoMenor := 0
 	//acordarse de al swapear, pasar la dirección
-	swap(&arr[pivote], &arr[medio]) // esto dicen es para optimizar
+	//swap(&arr[pivote], &arr[medio]) // esto dicen es para optimizar
 
 	for i := pivote + 1; i < len(arr); i++ {
 		if arr[i].LeerDNI() < arr[pivote].LeerDNI() {
@@ -29,16 +29,18 @@ func OrdenarPadrones(arr []TDAVotante.Votante) []TDAVotante.Votante {
 	//hago el llamado a la recursividad para que se ordenen las mitades menores al elemento del pivote y mayores al mismo
 	//acordarse que los slices no incluyen al final
 	OrdenarPadrones(arr[0 : ultimoMenor+1]) //hago el llamado para la mitad de menores hasta donde está el pivote
-	OrdenarPadrones(arr[ultimoMenor+2:])    //hago el llamado para la mitad superior al pivote.
-	return nil
+	OrdenarPadrones(arr[ultimoMenor+1:])    //hago el llamado para la mitad superior al pivote.
+	return arr
 }
 
 func swap(a *TDAVotante.Votante, b *TDAVotante.Votante) {
 	//capaz sale si hago que se pase como parametro la dirección
+
 	*a, *b = *b, *a
 
-	/*votanteAux := TDAVotante.CrearVotante(a.LeerDNI())
-	  a = b
-	  b = votanteAux*/
+	/*
+		votanteAux := a
+		a = b
+		b = votanteAux */
 	// con esto no es que cambio exactamente, sino que sobreescribo lo que tenia en cada posición
 }
