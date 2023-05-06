@@ -2,17 +2,7 @@ package votos
 
 import (
 	"strconv"
-	TDACola "tdas/cola"
-	TDALista "tdas/lista"
 )
-
-// esto eera para probar el import, despues lo borramos cuando codiemos cosas donde usemos las listas
-func list() {
-	l := TDALista.CrearListaEnlazada[int]()
-	l.InsertarPrimero(5)
-	c := TDACola.CrearColaEnlazada[int]()
-	c.Encolar(5)
-}
 
 type partidoImplementacion struct {
 	nombre      string
@@ -28,6 +18,10 @@ type partidoEnBlanco struct {
 func CrearPartido(nombre string, candidatos [CANT_VOTACION]string) Partido {
 	partido := new(partidoImplementacion)
 	partido.nombre = nombre
+
+	partido.postulantes[PRESIDENTE] = candidatos[PRESIDENTE]
+	partido.postulantes[GOBERNADOR] = candidatos[GOBERNADOR]
+	partido.postulantes[INTENDENTE] = candidatos[INTENDENTE]
 
 	//leo el archivo de los partidos, guardo su nombre y los candidatos en una cola, pila o lista
 	//cada partido tiene su nombre y 3 candidatos
