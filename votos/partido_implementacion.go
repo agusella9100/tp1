@@ -8,7 +8,6 @@ type partidoImplementacion struct {
 	nombre      string
 	postulantes [CANT_VOTACION]string
 	contadores  [CANT_VOTACION]int
-	numlista    int
 }
 
 type partidoEnBlanco struct {
